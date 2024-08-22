@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name="Pedidos", description = "Recurso para criar um novo pedido")
 @RestController
-@RequestMapping("/api/vi/pedidos")
+@RequestMapping("/api/v1/pedidos")
 public class PedidoController {
 
     private final Logger logger = LoggerFactory.getLogger(PedidoController.class);
