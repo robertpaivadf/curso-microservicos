@@ -20,6 +20,6 @@ public class PedidoController {
     public ResponseEntity<Pedido> criarPedido(@RequestBody Pedido pedido){
         logger.info("Pedido Recebido: {}", pedido.toString());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Pedido());
+        return ResponseEntity.status(HttpStatus.CREATED).body(pedido);
     }
 }
