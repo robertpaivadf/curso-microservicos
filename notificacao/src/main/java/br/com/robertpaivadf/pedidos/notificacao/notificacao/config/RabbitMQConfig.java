@@ -1,7 +1,9 @@
-package br.com.robertpaivadf.pedidos.api.config;
+package br.com.robertpaivadf.pedidos.notificacao.notificacao.config;
 
-import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -14,14 +16,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitmqConfig {
+public class RabbitMQConfig {
 
     @Value("${rabbitmq.exchange.name}")
     private String exchangeName;
 
+    @Value("${rabbitmq.queue.name}")
+    private String queueName;
+
     @Bean
-    public Exchange pedidosExchange() {
+    public FanoutExchange pedidosExchange() {
         return new FanoutExchange(exchangeName);
+    }
+
+    @Bean
+    public Queue notificacaoQueue() {
+        return new Queue(queueName);
+    }
+
+    @Bean
+    public Binding notificacaoBinding() {
+        return BindingBuilder.bind(notificacaoQueue()).to(pedidosExchange());
     }
 
     @Bean
@@ -42,13 +57,8 @@ public class RabbitmqConfig {
     }
 
     @Bean
-    public ApplicationListener<ApplicationReadyEvent> applicationReadyListener(RabbitAdmin rabbitAdmin) {
-//        return new ApplicationListener<ApplicationReadyEvent>() {
-//            @Override
-//            public void onApplicationEvent(ApplicationReadyEvent event) {
-//                rabbitAdmin.initialize();
-//            }
-//        };
-        return event -> rabbitAdmin.initialize();
+    public ApplicationListener<ApplicationReadyEvent> applicationReadyEventApplicationListener(RabbitAdmin rabbitAdmin) {
+       return event ->  rabbitAdmin.initialize();
     }
+
 }
