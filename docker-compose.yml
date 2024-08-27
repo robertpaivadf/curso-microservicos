@@ -21,6 +21,19 @@ services:
       - '1025:1025'
       - '8025:8025'
 
+  postgres:
+    image: postgres:15.7
+    restart: unless-stopped
+    container_name: postgressql-15.7
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/posrtgresql/data
+
 volumes:
+  postgres_data:
   rabbitmq_data:
   rabbitmq_log:
